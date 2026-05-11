@@ -6,7 +6,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useMutation } from '@tanstack/react-query';
 import { Loader2 } from 'lucide-react';
 import { useState } from 'react';
-import { useNavigate } from '@tanstack/react-router';
+import { useNavigate } from 'react-router-dom';
 
 export function UpdatePasswordView() {
   const [password, setPassword] = useState('');
@@ -23,7 +23,7 @@ export function UpdatePasswordView() {
           title: 'Success',
           description: 'Password updated successfully',
         });
-        navigate({ to: '/' });
+        navigate('/');
       },
       onError: () => {
         toast({

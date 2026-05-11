@@ -1,5 +1,5 @@
 import { getLevel, useAuth } from '@/contexts/AuthContext';
-import { Link } from '@tanstack/react-router';
+import { Link } from 'react-router-dom';
 import { TrialDialog } from './auth/TrialDialog';
 import { cn } from '@/lib/utils';
 

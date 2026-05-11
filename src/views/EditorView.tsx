@@ -1,6 +1,6 @@
 import { supabase } from '@/lib/supabase';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useNavigate, useParams } from '@tanstack/react-router';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { Loader2 } from 'lucide-react';
 import { CreativeEditorView } from './CreativeEditorView';
@@ -13,9 +13,7 @@ import { CurrentMessageContext } from '@/contexts/CurrentMessageContext';
 import { SelectedItemsContext } from '@/contexts/SelectedItemsContext';
 
 export default function EditorView() {
-  const { id: conversationId } = useParams({
-    from: '/_layout/_auth/editor/$id',
-  });
+  const { id: conversationId } = useParams();
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const [currentMessage, setCurrentMessage] = useState<Message | null>(null);
@@ -92,7 +90,7 @@ export default function EditorView() {
 
   useEffect(() => {
     if (!conversationId) {
-      navigate({ to: '/' });
+      navigate('/');
     }
   }, [conversationId, navigate]);
 

@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useNavigate, useLocation } from '@tanstack/react-router';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { Loader2 } from 'lucide-react';
 
@@ -16,19 +16,17 @@ export function AuthGuard({ children }: AuthGuardProps) {
     if (!isLoading && !session && !user) {
       // Capture current path for redirect after authentication
       // Only include pathname and search to avoid security issues
-      const currentPath = location.pathname + location.searchStr;
-      const search = currentPath !== '/' ? { redirect: currentPath } : {};
+      const currentPath = location.pathname + location.search;
 
-      navigate({ to: '/signin', search, replace: true });
+      // Only add redirect parameter if it's not the home page
+      const redirectParam =
+        currentPath !== '/'
+          ? `?redirect=${encodeURIComponent(currentPath)}`
+          : '';
+
+      navigate(`/signin${redirectParam}`);
     }
-  }, [
-    session,
-    user,
-    navigate,
-    isLoading,
-    location.pathname,
-    location.searchStr,
-  ]);
+  }, [session, user, navigate, isLoading, location.pathname, location.search]);
 
   if (isLoading) {
     return (

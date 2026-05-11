@@ -1,4 +1,4 @@
-import { Link, useNavigate, useLocation } from '@tanstack/react-router';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
@@ -8,12 +8,6 @@ import { GoogleIcon } from '@/components/icons/CompanyIcons';
 import { useEffect } from 'react';
 import { validateRedirectUrl } from '@/lib/utils';
 
-function getAppRedirectUrl(path: string) {
-  const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
-
-  return `${window.location.origin}${basePath}${path}`;
-}
-
 export function SignUpView() {
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -21,14 +15,14 @@ export function SignUpView() {
   const { session, user, isLoading: authLoading } = useAuth();
 
   // Get and validate redirect parameter from URL
-  const searchParams = new URLSearchParams(location.searchStr);
+  const searchParams = new URLSearchParams(location.search);
   const rawRedirectPath = searchParams.get('redirect');
   const redirectPath = validateRedirectUrl(rawRedirectPath);
 
   // Redirect to home if already authenticated
   useEffect(() => {
     if (!authLoading && session && user) {
-      navigate({ to: '/', replace: true });
+      navigate('/', { replace: true });
     }
   }, [session, user, authLoading, navigate]);
 
@@ -38,8 +32,8 @@ export function SignUpView() {
         // Use Supabase's built-in redirectTo parameter with validated URL
         const redirectTo =
           redirectPath !== '/'
-            ? getAppRedirectUrl(redirectPath)
-            : getAppRedirectUrl('/');
+            ? `${window.location.origin}${redirectPath}`
+            : `${window.location.origin}/`;
 
         await supabase.auth.signInWithOAuth({
           provider: 'google',

@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Session, User } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabase';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { useNavigate } from '@tanstack/react-router';
+import { useNavigate } from 'react-router-dom';
 import posthog from 'posthog-js';
 import { AuthContext, type BillingStatus, getLevel } from './AuthContext';
 
@@ -18,9 +18,7 @@ const ensurePermission = async () => {
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [session, setSession] = useState<Session | null>(
-    typeof window === 'undefined'
-      ? null
-      : JSON.parse(localStorage.getItem('session') ?? 'null'),
+    JSON.parse(localStorage.getItem('session') ?? 'null'),
   );
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -52,7 +50,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       localStorage.setItem('session', JSON.stringify(session));
       setUser(session?.user ?? null);
       if (event === 'PASSWORD_RECOVERY') {
-        navigate({ to: '/update-password' });
+        navigate('/update-password');
       }
     });
 
@@ -130,10 +128,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 });
                 notification.onclick = () => {
                   window.focus();
-                  navigate({
-                    to: '/editor/$id',
-                    params: { id: payload.conversation_id },
-                  });
+                  navigate(`/editor/${payload.conversation_id}`);
                   notification.close();
                 };
               }
